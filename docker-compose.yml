@@ -7,3 +7,11 @@ services:
     build:
       context: .
       dockerfile: CallTracking.FSConsumerWorker/Dockerfile
+
+  freeswitch:
+    hostname: freeswitch
+    container_name: freeswitch
+    image: ${DOCKER_REGISTRY-}freeswitch
+    build:
+      context: Voice/FreeSWITCH
+      dockerfile: Dockerfile

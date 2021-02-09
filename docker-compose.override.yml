@@ -3,3 +3,9 @@ services:
   calltracking.fsconsumerworker:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+  freeswitch:
+   ports:
+     - "5060:5060/udp"
+     - "5060:5060/tcp"
+     - "10000-10099:10000-10099/udp"

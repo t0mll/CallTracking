@@ -20,6 +20,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CallTracking.FSConsumerWork
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D4F43134-66FC-4955-864E-B87F0B762130}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Voice", "Voice", "{DA0B81FB-A1F5-48DA-8F12-59EEA04DFB2E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FreeSWITCH", "FreeSWITCH", "{A2624804-1B49-4324-A2EF-E07760B8C6E5}"
+	ProjectSection(SolutionItems) = preProject
+		Voice\FreeSWITCH\Dockerfile = Voice\FreeSWITCH\Dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +52,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2946BA64-06A5-41E3-9FC5-ACB654F35636} = {17797F00-5079-413A-8DFC-86BE61EC56D9}
 		{EF086091-442C-412B-9E85-7AB804856B5B} = {0FF6758C-C834-4E07-8996-54ACB84998B1}
+		{A2624804-1B49-4324-A2EF-E07760B8C6E5} = {DA0B81FB-A1F5-48DA-8F12-59EEA04DFB2E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26561E4E-45EC-45FA-8E45-EAECBFDB7857}
