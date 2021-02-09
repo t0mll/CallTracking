@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  calltracking.fsconsumerworker:
+    image: ${DOCKER_REGISTRY-}calltrackingfsconsumerworker
+    container_name: fs-consumer-worker
+    build:
+      context: .
+      dockerfile: CallTracking.FSConsumerWorker/Dockerfile
