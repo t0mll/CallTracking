@@ -11,7 +11,9 @@
     <list name="localnet.auto" default="allow">
       <node type="allow" cidr="172.18.0.0/16"/>
     </list>
-    
+    <list name="loopback.auto" default="allow">
+      <node type="allow" cidr="172.18.0.0/16"/>
+    </list>
     <list name="domains" default="deny">
       <!-- domain= is special it scans the domain from the directory to build the ACL -->
       <node type="allow" domain="$${domain}"/>
