@@ -52,9 +52,9 @@ namespace CallTracking.Kafka.Consumer
                         }
                     }
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException ex)
                 {
-                    // do nothing on cancellation
+                    _logger.LogInformation(ex.Message);
                 }
                 finally
                 {
