@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FreeSWITCH", "FreeSWITCH", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "configs", "configs", "{5E3ED70D-61AC-4985-8767-3ED255E554BE}"
 	ProjectSection(SolutionItems) = preProject
+		Voice\FreeSWITCH\configs\acl.conf.xml = Voice\FreeSWITCH\configs\acl.conf.xml
 		Voice\FreeSWITCH\configs\conference.conf.xml = Voice\FreeSWITCH\configs\conference.conf.xml
 		Voice\FreeSWITCH\configs\json_cdr.conf.xml = Voice\FreeSWITCH\configs\json_cdr.conf.xml
 		Voice\FreeSWITCH\configs\sip-dialplan.xml = Voice\FreeSWITCH\configs\sip-dialplan.xml
