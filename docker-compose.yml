@@ -15,3 +15,72 @@ services:
     build:
       context: Voice/FreeSWITCH
       dockerfile: Dockerfile
+  
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.1.0
+    hostname: zookeeper
+    container_name: zookeeper
+
+  broker:
+    image: confluentinc/cp-server:6.1.0
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:6.1.0
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - broker
+
+  connect:
+    image: cnfldemos/cp-server-connect-datagen:0.4.0-6.1.0
+    hostname: connect
+    container_name: connect
+    depends_on:
+      - broker
+      - schema-registry
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:6.1.0
+    hostname: control-center
+    container_name: control-center
+    depends_on:
+      - broker
+      - schema-registry
+      - connect
+      - ksqldb-server
+
+  ksqldb-server:
+    image: confluentinc/cp-ksqldb-server:6.1.0
+    hostname: ksqldb-server
+    container_name: ksqldb-server
+    depends_on:
+      - broker
+      - connect
+
+  ksqldb-cli:
+    image: confluentinc/cp-ksqldb-cli:6.1.0
+    container_name: ksqldb-cli
+    depends_on:
+      - broker
+      - connect
+      - ksqldb-server
+
+  ksql-datagen:
+    image: confluentinc/ksqldb-examples:6.1.0
+    hostname: ksql-datagen
+    container_name: ksql-datagen
+    depends_on:
+      - ksqldb-server
+      - broker
+      - schema-registry
+      - connect
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:6.1.0
+    depends_on:
+      - broker
+      - schema-registry
