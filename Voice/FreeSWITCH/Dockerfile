@@ -16,15 +16,17 @@ RUN /updatefs.sh
 RUN rm /updatefs.sh
 
 # add generic profile
-COPY /configs/sip-profile.xml /etc/freeswitch/sip_profiles/
+#COPY /configs/sip-profile.xml /etc/freeswitch/sip_profiles/
 # add generic config
-COPY /configs/sip-dialplan.xml /etc/freeswitch/dialplan/
+#COPY /configs/sip-dialplan.xml /etc/freeswitch/dialplan/
 # add generic conference config
-COPY /configs/conference.conf.xml /etc/freeswitch/autoload_configs/
-COPY /configs/json_cdr.conf.xml /etc/freeswitch/autoload_configs/
+#COPY /configs/conference.conf.xml /etc/freeswitch/autoload_configs/
+#COPY /configs/json_cdr.conf.xml /etc/freeswitch/autoload_configs/
+# add acl file with docker IP ranges
+COPY /configs/acl.conf.xml /etc/freeswitch/autoload_configs/
 # add run.sh
 COPY /run.sh /
-RUN touch /env.sh
+#RUN touch /env.sh
 
 ENV FS_SQLITE_MEMORY="true"
 
