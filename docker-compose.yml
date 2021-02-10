@@ -8,6 +8,15 @@ services:
       context: .
       dockerfile: CallTracking.FSConsumerWorker/Dockerfile
 
+  calltracking.fsproducerworker:
+    image: ${DOCKER_REGISTRY-}calltrackingfsproducerworker
+    container_name: fs-producer-worker
+    build:
+      context: .
+      dockerfile: CallTracking.FSProducerWorker/Dockerfile
+    depends_on:
+      - freeswitch
+
   freeswitch:
     hostname: freeswitch
     container_name: freeswitch

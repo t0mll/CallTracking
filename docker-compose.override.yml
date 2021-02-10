@@ -4,11 +4,20 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
+  calltracking.fsproducerworker:
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+    environment:
+     FREESWITCH_ESL_HOSTNAME: freeswitch
+     FREESWITCH_ESL_PORT: 8021
+
   freeswitch:
    ports:
      - "5060:5060/udp"
      - "5060:5060/tcp"
+     - "8021:8021"
      - "10000-10099:10000-10099/udp"
+
   zookeeper:
     ports:
       - "2181:2181"
