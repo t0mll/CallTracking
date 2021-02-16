@@ -1,5 +1,5 @@
-﻿using CallTracking.Kafka.Consumer.Interfaces;
-using CallTracking.Kafka.Interfaces;
+﻿using CallTracking.Kafka.Common.Consumer.Interfaces;
+using CallTracking.Kafka.Common.Interfaces;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CallTracking.Kafka.Consumer
+namespace CallTracking.Kafka.Common.Consumer
 {
     public class KafkaMessageConsumerManager : IKafkaMessageConsumerManager
     {

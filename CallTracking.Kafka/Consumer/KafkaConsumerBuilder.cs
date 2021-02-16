@@ -1,9 +1,9 @@
-﻿using CallTracking.Kafka.Consumer.Interfaces;
+﻿using CallTracking.Kafka.Common.Consumer.Interfaces;
 using Confluent.Kafka;
 using Microsoft.Extensions.Options;
 using System;
 
-namespace CallTracking.Kafka.Consumer
+namespace CallTracking.Kafka.Common.Consumer
 {
     public class KafkaConsumerBuilder : IKafkaConsumerBuilder
     {

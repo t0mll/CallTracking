@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 
-namespace CallTracking.Kafka.Consumer.Interfaces
+namespace CallTracking.Kafka.Common.Consumer.Interfaces
 {
     public interface IKafkaConsumerBuilder
     {

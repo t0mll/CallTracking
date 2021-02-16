@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CallTracking.Kafka
+namespace CallTracking.Kafka.Common
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class MessageTopicAttribute : Attribute

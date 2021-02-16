@@ -1,4 +1,4 @@
-﻿namespace CallTracking.Kafka
+﻿namespace CallTracking.Kafka.Common
 {
     public class KafkaOptions
     {

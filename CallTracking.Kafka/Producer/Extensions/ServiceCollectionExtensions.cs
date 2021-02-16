@@ -1,7 +1,7 @@
-﻿using CallTracking.Kafka.Producer.Interfaces;
+﻿using CallTracking.Kafka.Common.Producer.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CallTracking.Kafka.Producer.Extensions
+namespace CallTracking.Kafka.Common.Producer.Extensions
 {
     public static class ServiceCollectionExtensions
     {

@@ -1,5 +1,5 @@
-﻿using CallTracking.Kafka.Interfaces;
-using CallTracking.Kafka.Producer.Interfaces;
+﻿using CallTracking.Kafka.Common.Interfaces;
+using CallTracking.Kafka.Common.Producer.Interfaces;
 using Confluent.Kafka;
 using Newtonsoft.Json;
 using System;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CallTracking.Kafka.Producer
+namespace CallTracking.Kafka.Common.Producer
 {
     public class KafkaMessageProducer : IMessageProducer, IDisposable
     {

@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 
-namespace CallTracking.Kafka.Producer.Interfaces
+namespace CallTracking.Kafka.Common.Producer.Interfaces
 {
     public interface IKafkaProducerBuilder
     {

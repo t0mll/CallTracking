@@ -1,9 +1,9 @@
-﻿using CallTracking.Kafka.Producer.Interfaces;
+﻿using CallTracking.Kafka.Common.Producer.Interfaces;
 using Confluent.Kafka;
 using Microsoft.Extensions.Options;
 using System;
 
-namespace CallTracking.Kafka.Producer
+namespace CallTracking.Kafka.Common.Producer
 {
     public class KafkaProducerBuilder : IKafkaProducerBuilder
     {

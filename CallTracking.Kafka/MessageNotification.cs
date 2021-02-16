@@ -1,7 +1,7 @@
-﻿using CallTracking.Kafka.Interfaces;
+﻿using CallTracking.Kafka.Common.Interfaces;
 using MediatR;
 
-namespace CallTracking.Kafka
+namespace CallTracking.Kafka.Common
 {
     public class MessageNotification<TMessage> : INotification
         where TMessage : IMessage

@@ -10,6 +10,7 @@ services:
     environment:
      FREESWITCH_ESL_HOSTNAME: freeswitch
      FREESWITCH_ESL_PORT: 8021
+     FREESWITCH_ESL_PASSWORD: ClueCon
 
   freeswitch:
    ports:

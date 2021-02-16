@@ -1,9 +1,9 @@
-﻿using CallTracking.Kafka.Consumer.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using MediatR;
+using CallTracking.Kafka.Common.Consumer.Interfaces;
 
-namespace CallTracking.Kafka.Consumer.Extensions
+namespace CallTracking.Kafka.Common.Consumer.Extensions
 {
     public static class ServiceCollectionExtensions
     {

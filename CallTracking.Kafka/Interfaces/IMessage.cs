@@ -1,4 +1,4 @@
-﻿namespace CallTracking.Kafka.Interfaces
+﻿namespace CallTracking.Kafka.Common.Interfaces
 {
     public interface IMessage
     {
