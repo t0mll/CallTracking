@@ -28,7 +28,15 @@ COPY /configs/acl.conf.xml /etc/freeswitch/autoload_configs/
 COPY /run.sh /
 #RUN touch /env.sh
 
+EXPOSE 8021/tcp
+EXPOSE 5060/tcp 5060/udp 5080/tcp 5080/udp
+#EXPOSE 5061/tcp 5061/udp 5081/tcp 5081/udp
+#EXPOSE 7443/tcp
+EXPOSE 5070/udp 5070/tcp
+EXPOSE 64535-65535/udp
+EXPOSE 16384-32768/udp
+
 ENV FS_SQLITE_MEMORY="true"
 
 ENTRYPOINT ["/run.sh"]
-CMD ["/usr/bin/freeswitch", "-nonat", "-nf", "-nc"]
+CMD ["/usr/bin/freeswitch", "-nonat", "-c"]

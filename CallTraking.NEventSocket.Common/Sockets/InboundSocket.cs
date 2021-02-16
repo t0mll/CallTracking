@@ -14,9 +14,9 @@ namespace CallTraking.NEventSocket.Common.Sockets
     /// </summary>
     public class InboundSocket : EventSocket
     {
-        private readonly ILogger<EventSocket> _logger;
+        private readonly ILogger<InboundSocket> _logger;
 
-        public InboundSocket(string host, int port, string password, TimeSpan? timeout = null, ILogger<EventSocket> logger = null) : base(new TcpClient(host, port), timeout, logger)
+        public InboundSocket(ILogger<InboundSocket> logger, string host, int port, string password, TimeSpan? timeout = null) : base(new TcpClient(host, port), timeout, logger)
         {
             _logger = logger;
             InitialiseAsync(host, port, password, timeout);

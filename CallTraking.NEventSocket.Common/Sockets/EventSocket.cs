@@ -23,7 +23,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
 {
     public abstract class EventSocket : ObservableSocket, IEventSocket
     {
-        private readonly ILogger<EventSocket> _logger;
+        private readonly ILogger _logger;
         // minimum events required for this class to do its job
         private readonly HashSet<EventNames> _subscribedEvents = new HashSet<EventNames>();
         private readonly HashSet<string> _customEvents = new HashSet<string>();
