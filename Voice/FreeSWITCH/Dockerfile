@@ -4,39 +4,44 @@ RUN apt-get update && \
 apt-get dist-upgrade -y && \
 apt-get install -y --no-install-recommends curl gnupg gnupg2 lsb-release && \
 curl -k https://files.freeswitch.org/repo/deb/debian-release/fsstretch-archive-keyring.asc | apt-key add - && \
-echo 'deb http://files.freeswitch.org/repo/deb/debian-release/ buster main' > /etc/apt/sources.list.d/freeswitch.list && \
-apt-get update && \
+echo 'deb http://files.freeswitch.org/repo/deb/debian-release/ buster main' > /etc/apt/sources.list.d/freeswitch.list
 
-apt-get install -y --no-install-recommends freeswitch-conf-curl freeswitch-mod-b64 freeswitch-mod-blacklist freeswitch-mod-cdr-csv freeswitch-mod-cdr-sqlite freeswitch-mod-cidlookup freeswitch-mod-commands freeswitch-mod-conference freeswitch-mod-console freeswitch-mod-curl freeswitch-mod-db freeswitch-mod-dialplan-xml freeswitch-mod-dptools freeswitch-mod-enum freeswitch-mod-event-socket freeswitch-mod-expr freeswitch-mod-fifo freeswitch-mod-format-cdr freeswitch-mod-fsv freeswitch-mod-g723-1 freeswitch-mod-g729 freeswitch-mod-graylog2 freeswitch-mod-hash freeswitch-mod-httapi freeswitch-mod-json-cdr freeswitch-mod-local-stream freeswitch-mod-logfile freeswitch-mod-loopback freeswitch-mod-lua freeswitch-mod-native-file freeswitch-mod-opus freeswitch-mod-posix-timer freeswitch-mod-prefix freeswitch-mod-python freeswitch-mod-radius-cdr freeswitch-mod-random freeswitch-mod-rtc freeswitch-mod-sndfile freeswitch-mod-snmp freeswitch-mod-sofia freeswitch-mod-spandsp freeswitch-mod-spy freeswitch-mod-syslog freeswitch-mod-timerfd freeswitch-mod-tone-stream freeswitch-mod-valet-parking freeswitch-mod-xml-cdr freeswitch-mod-xml-curl freeswitch-mod-xml-rpc freeswitch-mod-yaml freeswitch-timezones freeswitch-conf-vanilla freeswitch freeswitch-mod-av dumb-init freeswitch-mod-v8 curl
+RUN apt-get update && apt-get install -y --no-install-recommends freeswitch-meta-all
+RUN apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
 
+# Clean up
+RUN apt-get autoremove
 
-# run config changes
-COPY /configs/updatefs.sh /
-RUN /updatefs.sh
-RUN rm /updatefs.sh
-
-# add generic profile
-#COPY /configs/sip-profile.xml /etc/freeswitch/sip_profiles/
-# add generic config
-#COPY /configs/sip-dialplan.xml /etc/freeswitch/dialplan/
-# add generic conference config
-#COPY /configs/conference.conf.xml /etc/freeswitch/autoload_configs/
-#COPY /configs/json_cdr.conf.xml /etc/freeswitch/autoload_configs/
-# add acl file with docker IP ranges
-COPY /configs/acl.conf.xml /etc/freeswitch/autoload_configs/
-# add run.sh
-COPY /run.sh /
-#RUN touch /env.sh
-
+COPY docker-entrypoint.sh /
+## Ports
+# Open the container up to the world.
+### 8021 fs_cli, 5060 5061 5080 5081 sip and sips, 64535-65535 rtp
 EXPOSE 8021/tcp
 EXPOSE 5060/tcp 5060/udp 5080/tcp 5080/udp
-#EXPOSE 5061/tcp 5061/udp 5081/tcp 5081/udp
-#EXPOSE 7443/tcp
+EXPOSE 5061/tcp 5061/udp 5081/tcp 5081/udp
+EXPOSE 7443/tcp
 EXPOSE 5070/udp 5070/tcp
 EXPOSE 64535-65535/udp
-EXPOSE 16384-32768/udp
+#EXPOSE 16384-32768/udp
 
-ENV FS_SQLITE_MEMORY="true"
+# Volumes
+## Freeswitch Configuration
+VOLUME ["/etc/freeswitch"]
+## Tmp so we can get core dumps out
+VOLUME ["/tmp"]
 
-ENTRYPOINT ["/run.sh"]
-CMD ["/usr/bin/freeswitch", "-nonat", "-c"]
+# Limits Configuration
+COPY    configs/freeswitch.limits.conf /etc/security/limits.d/
+
+# Healthcheck to make sure the service is running
+SHELL       ["/bin/bash"]
+HEALTHCHECK --interval=15s --timeout=5s \
+    CMD  fs_cli -x status | grep -q ^UP || exit 1
+
+## Add additional things here
+
+##
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+CMD ["freeswitch"]

@@ -24,18 +24,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Voice", "Voice", "{DA0B81FB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FreeSWITCH", "FreeSWITCH", "{A2624804-1B49-4324-A2EF-E07760B8C6E5}"
 	ProjectSection(SolutionItems) = preProject
+		Voice\FreeSWITCH\docker-entrypoint.sh = Voice\FreeSWITCH\docker-entrypoint.sh
 		Voice\FreeSWITCH\Dockerfile = Voice\FreeSWITCH\Dockerfile
-		Voice\FreeSWITCH\run.sh = Voice\FreeSWITCH\run.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "configs", "configs", "{5E3ED70D-61AC-4985-8767-3ED255E554BE}"
 	ProjectSection(SolutionItems) = preProject
-		Voice\FreeSWITCH\configs\acl.conf.xml = Voice\FreeSWITCH\configs\acl.conf.xml
-		Voice\FreeSWITCH\configs\conference.conf.xml = Voice\FreeSWITCH\configs\conference.conf.xml
-		Voice\FreeSWITCH\configs\json_cdr.conf.xml = Voice\FreeSWITCH\configs\json_cdr.conf.xml
-		Voice\FreeSWITCH\configs\sip-dialplan.xml = Voice\FreeSWITCH\configs\sip-dialplan.xml
-		Voice\FreeSWITCH\configs\sip-profile.xml = Voice\FreeSWITCH\configs\sip-profile.xml
-		Voice\FreeSWITCH\configs\updatefs.sh = Voice\FreeSWITCH\configs\updatefs.sh
+		Voice\FreeSWITCH\configs\freeswitch.limits.conf = Voice\FreeSWITCH\configs\freeswitch.limits.conf
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Producers", "Producers", "{30D2AA72-79FF-4D0F-BA34-0812366C2ABE}"
@@ -48,7 +43,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NEventSocket", "NEventSocke
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NEventSocket.Common", "NEventSocket.Common", "{7FD62E62-129F-4921-82DA-39EF03BC8C21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CallTraking.NEventSocket.Common", "CallTraking.NEventSocket.Common\CallTraking.NEventSocket.Common.csproj", "{1594A3F9-001F-4CBB-8B77-5B7DABEF9CF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CallTraking.NEventSocket.Common", "CallTraking.NEventSocket.Common\CallTraking.NEventSocket.Common.csproj", "{1594A3F9-001F-4CBB-8B77-5B7DABEF9CF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
