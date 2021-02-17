@@ -38,7 +38,7 @@ namespace CallTraking.NEventSocket.Common.Channels
             Dispose(false);
         }
 
-        protected BaseChannel(ILogger<BaseChannel> logger, ChannelEvent eventMessage, EventSocket EventSocket)
+        protected BaseChannel(ChannelEvent eventMessage, EventSocket EventSocket, ILogger<BaseChannel> logger = null)
         {
             _logger = logger;
             UUID = eventMessage.UUID;
@@ -57,12 +57,12 @@ namespace CallTraking.NEventSocket.Common.Channels
 
                                    if (e.EventName == EventNames.ChannelAnswer)
                                    {
-                                       _logger.LogInformation($"Channel [{UUID}] Answered");
+                                       _logger?.LogInformation($"Channel [{UUID}] Answered");
                                    }
 
                                    if (e.EventName == EventNames.ChannelHangupComplete)
                                    {
-                                       _logger.LogInformation($"Channel [{UUID}] Hangup Detected [{e.HangupCause}]");
+                                       _logger?.LogInformation($"Channel [{UUID}] Hangup Detected [{e.HangupCause}]");
 
                                        try
                                        {
@@ -70,7 +70,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                                        }
                                        catch (Exception ex)
                                        {
-                                           _logger.LogError(ex, $"Channel [{UUID}] error calling hangup callback");
+                                           _logger?.LogError(ex, $"Channel [{UUID}] error calling hangup callback");
                                        }
 
                                        Dispose();
@@ -178,7 +178,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                        .Buffer(TimeSpan.FromSeconds(2), 2)
                        .Where(x => x.Count == 2 && x[0] == prefix)
                        .Select(x => string.Concat(x))
-                       .Do(x => _logger.LogDebug($"Channel {UUID} detected Feature Code {x}"));
+                       .Do(x => _logger?.LogDebug($"Channel {UUID} detected Feature Code {x}"));
         }
 
         public Task Hangup(HangupCause hangupCause = FreeSWITCH.Channel.HangupCause.NormalClearing)
@@ -249,7 +249,7 @@ namespace CallTraking.NEventSocket.Common.Channels
         {
             if (!CanPlayBackAudio)
             {
-                _logger.LogWarning($"Channel [{UUID}] attempted to play hold music when not answered");
+                _logger?.LogWarning($"Channel [{UUID}] attempted to play hold music when not answered");
                 return Task.FromResult(new DisposableAction());
             }
 
@@ -271,7 +271,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, $"Error calling 'api uuid_break {UUID}'");
+                        _logger?.LogError(ex, $"Error calling 'api uuid_break {UUID}'");
                     }
                 });
 
@@ -315,28 +315,28 @@ namespace CallTraking.NEventSocket.Common.Channels
 
                 var events = EventSocket.ChannelEvents;
 
-                _logger.LogDebug($"Att XFer Starting A-Leg [{aLegUUID}] B-Leg [{bLegUUID}]");
+                _logger?.LogDebug($"Att XFer Starting A-Leg [{aLegUUID}] B-Leg [{bLegUUID}]");
 
                 var aLegHangup = events.Where(x => x.EventName == EventNames.ChannelHangup && x.UUID == aLegUUID)
-                                        .Do(x => _logger.LogDebug($"Att XFer Hangup Detected on A-Leg [{x.UUID}]"));
+                                        .Do(x => _logger?.LogDebug($"Att XFer Hangup Detected on A-Leg [{x.UUID}]"));
 
                 var bLegHangup = events.Where(x => x.EventName == EventNames.ChannelHangup && x.UUID == bLegUUID)
-                                        .Do(x => _logger.LogDebug($"Att XFer Hangup Detected on B-Leg [{x.UUID}]"));
+                                        .Do(x => _logger?.LogDebug($"Att XFer Hangup Detected on B-Leg [{x.UUID}]"));
 
                 var cLegHangup = events.Where(x => x.EventName == EventNames.ChannelHangup && x.UUID != bLegUUID && x.UUID != aLegUUID)
-                                        .Do(x => _logger.LogDebug($"Att XFer Hangup Detected on C-Leg[{x.UUID}]"));
+                                        .Do(x => _logger?.LogDebug($"Att XFer Hangup Detected on C-Leg[{x.UUID}]"));
 
                 var cLegAnswer =
                     events.Where(x => x.EventName == EventNames.ChannelAnswer && x.UUID != bLegUUID && x.UUID != aLegUUID)
-                          .Do(x => _logger.LogDebug($"Att XFer Answer Detected on C-Leg [{x.UUID}]"));
+                          .Do(x => _logger?.LogDebug($"Att XFer Answer Detected on C-Leg [{x.UUID}]"));
 
                 var aLegBridge =
                     events.Where(x => x.EventName == EventNames.ChannelBridge && x.UUID == aLegUUID)
-                          .Do(x => _logger.LogDebug($"Att XFer Bridge Detected on A-Leg [{x.UUID}]"));
+                          .Do(x => _logger?.LogDebug($"Att XFer Bridge Detected on A-Leg [{x.UUID}]"));
 
                 var cLegBridge =
                     events.Where(x => x.EventName == EventNames.ChannelBridge && x.UUID != bLegUUID && x.UUID != aLegUUID)
-                          .Do(x => _logger.LogDebug($"Att XFer Bridge Detected on C-Leg [{x.UUID}]"));
+                          .Do(x => _logger?.LogDebug($"Att XFer Bridge Detected on C-Leg [{x.UUID}]"));
 
 
                 var channelExecuteComplete =
@@ -363,7 +363,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                     .Subscribe(
                         x =>
                         {
-                            _logger.LogDebug("Att Xfer Not Answered");
+                            _logger?.LogDebug("Att Xfer Not Answered");
                             tcs.TrySetResult(AttendedTransferResult.Failed(x.GetVariable("originate_disposition").HeaderToEnum<HangupCause>()));
 
                         }));
@@ -372,14 +372,14 @@ namespace CallTraking.NEventSocket.Common.Channels
                                             .Subscribe(
                                                 x =>
                                                 {
-                                                    _logger.LogDebug("Att Xfer Rejected after C Hungup");
+                                                    _logger?.LogDebug("Att Xfer Rejected after C Hungup");
                                                     tcs.TrySetResult(AttendedTransferResult.Failed(FreeSWITCH.Channel.HangupCause.NormalClearing));
                                                 }));
 
                 subscriptions.Add(channelExecuteComplete.Where(x => !string.IsNullOrEmpty(x.GetVariable("xfer_uuids")))
                                             .Subscribe(x =>
                                             {
-                                                _logger.LogDebug("Att Xfer Success (threeway)");
+                                                _logger?.LogDebug("Att Xfer Success (threeway)");
                                                 tcs.TrySetResult(AttendedTransferResult.Success(AttendedTransferResultStatus.Threeway));
                                             }));
 
@@ -387,7 +387,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                                             .Subscribe(
                                                 x =>
                                                 {
-                                                    _logger.LogDebug("Att Xfer Succeeded after B pressed *");
+                                                    _logger?.LogDebug("Att Xfer Succeeded after B pressed *");
                                                     tcs.TrySetResult(AttendedTransferResult.Success());
                                                 }));
 
@@ -395,14 +395,14 @@ namespace CallTraking.NEventSocket.Common.Channels
                                             .Subscribe(
                                                 x =>
                                                 {
-                                                    _logger.LogDebug("Att Xfer Succeeded after B hung up and C answered");
+                                                    _logger?.LogDebug("Att Xfer Succeeded after B hung up and C answered");
                                                     tcs.TrySetResult(AttendedTransferResult.Success());
                                                 }));
 
                 subscriptions.Add(aLegHangup.Subscribe(
                     x =>
                     {
-                        _logger.LogDebug("Att Xfer Failed after A-Leg Hung Up");
+                        _logger?.LogDebug("Att Xfer Failed after A-Leg Hung Up");
                         tcs.TrySetResult(AttendedTransferResult.Hangup(x));
                     }));
 
@@ -437,7 +437,7 @@ namespace CallTraking.NEventSocket.Common.Channels
             return RunIfAnswered(
                 () =>
                 {
-                    _logger.LogDebug($"Channel {UUID} setting variable '{name}' to '{value}'");
+                    _logger?.LogDebug($"Channel {UUID} setting variable '{name}' to '{value}'");
                     return EventSocket.SendApi($"uuid_setvar {UUID} {name} {value}");
                 });
         }
@@ -466,7 +466,7 @@ namespace CallTraking.NEventSocket.Common.Channels
 
                     if (_recordingPath != null)
                     {
-                        _logger.LogWarning($"Channel {UUID} received a request to record to file {file} " +
+                        _logger?.LogWarning($"Channel {UUID} received a request to record to file {file} " +
                             $"while currently recording to file {_recordingPath}. " +
                             $"Channel will stop recording and start recording to the new file.");
                         await StopRecording().ConfigureAwait(false);
@@ -474,7 +474,7 @@ namespace CallTraking.NEventSocket.Common.Channels
 
                     _recordingPath = file;
                     await EventSocket.SendApi($"uuid_record {UUID} start {_recordingPath} {maxSeconds}").ConfigureAwait(false);
-                    _logger.LogDebug($"Channel {UUID} is recording to {_recordingPath}");
+                    _logger?.LogDebug($"Channel {UUID} is recording to {_recordingPath}");
                     recordingStatus = RecordingStatus.Recording;
                 });
         }
@@ -486,12 +486,12 @@ namespace CallTraking.NEventSocket.Common.Channels
                 {
                     if (string.IsNullOrEmpty(_recordingPath))
                     {
-                        _logger.LogWarning($"Channel {UUID} is not recording");
+                        _logger?.LogWarning($"Channel {UUID} is not recording");
                     }
                     else
                     {
                         await EventSocket.SendApi($"uuid_record {UUID} mask {_recordingPath}").ConfigureAwait(false);
-                        _logger.LogDebug($"Channel {UUID} has masked recording to {_recordingPath}");
+                        _logger?.LogDebug($"Channel {UUID} has masked recording to {_recordingPath}");
                         recordingStatus = RecordingStatus.Paused;
                     }
                 });
@@ -504,12 +504,12 @@ namespace CallTraking.NEventSocket.Common.Channels
                 {
                     if (string.IsNullOrEmpty(_recordingPath))
                     {
-                       _logger.LogWarning($"Channel {UUID} is not recording");
+                        _logger?.LogWarning($"Channel {UUID} is not recording");
                     }
                     else
                     {
                         await EventSocket.SendApi($"uuid_record {UUID} unmask {_recordingPath}").ConfigureAwait(false);
-                        _logger.LogDebug($"Channel {UUID} has unmasked recording to {_recordingPath}");
+                        _logger?.LogDebug($"Channel {UUID} has unmasked recording to {_recordingPath}");
                         recordingStatus = RecordingStatus.Recording;
                     }
                 });
@@ -522,13 +522,13 @@ namespace CallTraking.NEventSocket.Common.Channels
                 {
                     if (string.IsNullOrEmpty(_recordingPath))
                     {
-                        _logger.LogWarning($"Channel {UUID} is not recording");
+                        _logger?.LogWarning($"Channel {UUID} is not recording");
                     }
                     else
                     {
                         await EventSocket.SendApi($"uuid_record {UUID} stop {_recordingPath}").ConfigureAwait(false);
                         _recordingPath = null;
-                        _logger.LogDebug($"Channel {UUID} has stopped recording to {_recordingPath}");
+                        _logger?.LogDebug($"Channel {UUID} has stopped recording to {_recordingPath}");
                         recordingStatus = RecordingStatus.NotRecording;
                     }
                 });
@@ -557,7 +557,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                     }
                 }
 
-                _logger.LogDebug("BaseChannel Disposed.");
+                _logger?.LogDebug("BaseChannel Disposed.");
             }
         }
 

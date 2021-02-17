@@ -1,7 +1,6 @@
 using CallTraking.NEventSocket.Common.FreeSWITCH.Applications.Originate;
 using CallTraking.NEventSocket.Common.FreeSWITCH.Events;
-using CallTraking.NEventSocket.Common.FreeSWITCH.Headers;
-using CallTraking.NEventSocket.Common.Sockets;
+using CallTraking.NEventSocket.Common.Sockets.Interfaces;
 using CallTraking.NEventSocket.Common.Utils.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -29,13 +28,19 @@ namespace CallTracking.FSProducerWorker
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            stoppingToken.ThrowIfCancellationRequested();
+
             var apiResponse = await _socket.SendApi("status");
             _logger.LogInformation(apiResponse.BodyText);
 
-            var originate =
-                    await
-                        _socket.Originate(
+            await _socket.SubscribeEvents(EventNames.All);
 
+            _socket.ChannelEvents.Subscribe(e => _logger.LogInformation($"Channel Event [{e.UUID}] - {e.EventName}"));
+
+            _socket.ChannelEvents.Where(x => x.EventName == EventNames.ChannelAnswer)
+                .Subscribe(async x => await _socket.Play(x.UUID, "misc/8000/misc-freeswitch_is_state_of_the_art.wav"));
+
+            var originate = await _socket.Originate(
                             "user/1000",
                             new OriginateOptions
                             {
@@ -48,40 +53,6 @@ namespace CallTracking.FSProducerWorker
             if (!originate.Success)
             {
                 _logger.LogError($"Failed to originate the call {originate.HangupCause}");
-            }
-            else
-            {
-                var uuid = originate.ChannelData.UUID;
-                _logger.LogInformation($"Channel [{uuid}]");
-
-                await _socket.SubscribeEvents(EventNames.All);  
-
-                _socket.OnHangup(
-                    uuid,
-                    e =>
-                    {
-                        _logger.LogWarning($"Hangup Detected on A-Leg {e.Headers[HeaderNames.CallerUniqueId]} {e.Headers[HeaderNames.HangupCause]}");
-
-                        _socket.Exit();
-                    });
-
-                _socket.ChannelEvents.Where(x =>
-                    x.UUID == uuid &&
-                    x.EventName == EventNames.Dtmf).Subscribe(
-                    e =>
-                    {
-                        _logger.LogInformation("Got DTMF");
-                        _logger.LogInformation($"{ e.UUID == uuid}");
-                        _logger.LogInformation($"UIIDS: event {e.UUID} ours {uuid}");
-                        _logger.LogInformation(e.Headers[HeaderNames.DtmfDigit]);
-                    });
-
-            }
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-
-
             }
         }
     }

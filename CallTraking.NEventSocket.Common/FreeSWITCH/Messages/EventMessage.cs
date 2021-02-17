@@ -16,10 +16,13 @@ namespace CallTraking.NEventSocket.Common.FreeSWITCH.Messages
     [Serializable]
     public class EventMessage : BasicMessage
     {
+        [NonSerialized]
         private readonly ILogger<EventMessage> _logger;
 
-        internal EventMessage(BasicMessage basicMessage)
+        internal EventMessage(BasicMessage basicMessage, ILogger<EventMessage> logger = null)
         {
+            _logger = logger;
+
             if (basicMessage is EventMessage)
             {
                 Headers = basicMessage.Headers;
@@ -80,8 +83,8 @@ namespace CallTraking.NEventSocket.Common.FreeSWITCH.Messages
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to parse body of event");
-                _logger.LogError(BodyText);
+                _logger?.LogError(ex, "Failed to parse body of event");
+                _logger?.LogError(BodyText);
                 throw;
             }
 
@@ -90,7 +93,7 @@ namespace CallTraking.NEventSocket.Common.FreeSWITCH.Messages
         /// <summary>
         /// Default constructor
         /// </summary>
-        protected EventMessage(ILogger<EventMessage> logger)
+        protected EventMessage(ILogger<EventMessage> logger = null)
         {
             _logger = logger;
         }

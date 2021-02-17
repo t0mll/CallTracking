@@ -2,7 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CallTraking.NEventSocket.Common.Sockets
+namespace CallTraking.NEventSocket.Common.Sockets.Interfaces
+
 {
     public interface IObservableSocket
     {

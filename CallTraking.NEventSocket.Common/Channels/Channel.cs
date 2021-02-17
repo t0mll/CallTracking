@@ -23,18 +23,20 @@ namespace CallTraking.NEventSocket.Common.Channels
         private string _bridgedUUID;
         private readonly ILogger<Channel> _logger;
 
-        protected internal Channel(ILogger<Channel> logger, OutboundSocket outboundSocket) : this(logger, outboundSocket.ChannelData, outboundSocket)
+        protected internal Channel(OutboundSocket outboundSocket, ILogger<Channel> logger = null) : this(outboundSocket.ChannelData, outboundSocket, logger)
         {
+            _logger = logger;
         }
 
-        protected internal Channel(ILogger<Channel> logger, ChannelEvent eventMessage, EventSocket eventSocket) : base(logger, eventMessage, eventSocket)
+        protected internal Channel(ChannelEvent eventMessage, EventSocket eventSocket, ILogger<Channel> logger = null) : base(eventMessage, eventSocket, logger)
         {
+            _logger = logger;
             LingerTime = 10;
         }
 
-        internal static async Task<Channel> Create(ILogger<Channel> logger, OutboundSocket outboundSocket)
+        internal static async Task<Channel> Create(OutboundSocket outboundSocket, ILogger<Channel> logger = null)
         {
-            var channel = new Channel(logger, outboundSocket)
+            var channel = new Channel(outboundSocket, logger)
             {
                 ExitOnHangup = true
             };
@@ -80,7 +82,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                 return;
             }
 
-            _logger.LogDebug($"Channel {UUID} is attempting a bridge to {destination}");
+            _logger?.LogDebug($"Channel {UUID} is attempting a bridge to {destination}");
 
             if (string.IsNullOrEmpty(options.UUID))
             {
@@ -100,7 +102,7 @@ namespace CallTraking.NEventSocket.Common.Channels
             var bridgedChannel = this.BridgedChannels.FirstAsync(x => x.UUID == options.UUID);
             var result = await EventSocket.Bridge(UUID, destination, options).ConfigureAwait(false);
 
-            _logger.LogDebug($"Channel {UUID} bridge complete {result.Success} {result.ResponseText}");
+            _logger?.LogDebug($"Channel {UUID} bridge complete {result.Success} {result.ResponseText}");
             subscriptions.Dispose();
 
             if (result.Success)
@@ -199,7 +201,7 @@ namespace CallTraking.NEventSocket.Common.Channels
 
                 EventSocket = null;
 
-                _logger.LogDebug("Channel Disposed.");
+                _logger?.LogDebug("Channel Disposed.");
             }
 
             base.Dispose(disposing);
@@ -209,7 +211,7 @@ namespace CallTraking.NEventSocket.Common.Channels
         {
             if (_initialized.EnsureCalledOnce())
             {
-                _logger.LogWarning("Channel already initialized");
+                _logger?.LogWarning("Channel already initialized");
                 return;
             }
 
@@ -220,18 +222,18 @@ namespace CallTraking.NEventSocket.Common.Channels
                     .Subscribe(
                         async x =>
                         {
-                            _logger.LogInformation($"Channel [{UUID}] Bridged to [{x.GetHeader(HeaderNames.OtherLegUniqueId)}] CHANNEL_BRIDGE");
+                            _logger?.LogInformation($"Channel [{UUID}] Bridged to [{x.GetHeader(HeaderNames.OtherLegUniqueId)}] CHANNEL_BRIDGE");
 
                             var apiResponse = await EventSocket.Api("uuid_dump", x.OtherLegUUID);
 
                             if (apiResponse.Success && apiResponse.BodyText != "+OK")
                             {
                                 var eventMessage = new ChannelEvent(apiResponse);
-                                _bridgedChannelsSubject.OnNext(new BridgedChannel(_logger, eventMessage, EventSocket));
+                                _bridgedChannelsSubject.OnNext(new BridgedChannel(eventMessage, EventSocket, _logger));
                             }
                             else
                             {
-                                _logger.LogError($"Unable to get CHANNEL_DATA info from 'api uuid_dump {x.OtherLegUUID}' - received '{apiResponse.BodyText}'.");
+                                _logger?.LogError($"Unable to get CHANNEL_DATA info from 'api uuid_dump {x.OtherLegUUID}' - received '{apiResponse.BodyText}'.");
                             }
                         }));
 
@@ -250,7 +252,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                                     * in this case, bridge_hangup_cause will be empty so we'll ignore those events
                                     * however, this may break if this channel has had any completed bridges before this. */
 
-                                   _logger.LogInformation($"Channel [{UUID}] Unbridged from [{x.GetVariable("last_bridge_to")}] {x.GetVariable("bridge_hangup_cause")}");
+                                   _logger?.LogInformation($"Channel [{UUID}] Unbridged from [{x.GetVariable("last_bridge_to")}] {x.GetVariable("bridge_hangup_cause")}");
 
                                    _bridgedChannelsSubject.OnNext(null); //clears out OtherLeg
                                }));
@@ -271,7 +273,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                     await EventSocket.Filter(HeaderNames.OtherLegUniqueId, _bridgedUUID).ConfigureAwait(false);
                     await EventSocket.Filter(HeaderNames.ChannelCallUniqueId, _bridgedUUID).ConfigureAwait(false);
 
-                    _logger.LogTrace($"Channel [{UUID}] setting OtherLeg to [{b.UUID}]");
+                    _logger?.LogTrace($"Channel [{UUID}] setting OtherLeg to [{b.UUID}]");
                 }));
 
             Disposables.Add(
@@ -285,8 +287,8 @@ namespace CallTraking.NEventSocket.Common.Channels
                         x =>
                         {
                             //there is another channel out there that has bridged to us but we didn't get the CHANNEL_BRIDGE event on this channel
-                            _logger.LogInformation($"Channel [{UUID}] bridged to [{x.UUID}]] on CHANNEL_BRIDGE received on other channel");
-                            _bridgedChannelsSubject.OnNext(new BridgedChannel(_logger, x, EventSocket));
+                            _logger?.LogInformation($"Channel [{UUID}] bridged to [{x.UUID}]] on CHANNEL_BRIDGE received on other channel");
+                            _bridgedChannelsSubject.OnNext(new BridgedChannel(x, EventSocket, _logger));
                         }));
 
 
@@ -302,13 +304,13 @@ namespace CallTraking.NEventSocket.Common.Channels
                                            //give event subscribers time to complete
                                            if (LingerTime > 0)
                                            {
-                                               _logger.LogDebug($"Channel[{UUID}] will exit in {LingerTime} seconds...");
+                                               _logger?.LogDebug($"Channel[{UUID}] will exit in {LingerTime} seconds...");
                                                await Task.Delay(LingerTime * 1000);
                                            }
 
                                            if (EventSocket != null)
                                            {
-                                               _logger.LogInformation($"Channel [{UUID}] exiting");
+                                               _logger?.LogInformation($"Channel [{UUID}] exiting");
                                                await EventSocket.Exit().ConfigureAwait(false);
                                            }
 
@@ -317,7 +319,7 @@ namespace CallTraking.NEventSocket.Common.Channels
                                    }));
             }
 
-            _logger.LogTrace($"Channel [{UUID}] subscriptions initialized");
+            _logger?.LogTrace($"Channel [{UUID}] subscriptions initialized");
         }
     }
 }

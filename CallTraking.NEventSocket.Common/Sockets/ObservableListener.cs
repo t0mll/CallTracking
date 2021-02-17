@@ -20,7 +20,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
     /// <typeparam name="T">The type of <seealso cref="ObservableSocket"/> that this listener will provide.</typeparam>
     public abstract class ObservableListener<T> : IDisposable where T : ObservableSocket
     {
-        private readonly ILogger<T> _logger;
+        private readonly ILogger _logger;
         private readonly Subject<Unit> _listenerTermination = new Subject<Unit>();
         private readonly List<T> _connections = new List<T>();
         private readonly Subject<T> _observable = new Subject<T>();
@@ -43,7 +43,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
         /// </summary>
         /// <param name="port">The Tcp Port on which to listen for incoming connections.</param>
         /// <param name="observableSocketFactory">A function returning an object that inherits from <seealso cref="ObservableSocket" />.</param>
-        protected ObservableListener(ILogger<T> logger, int port, Func<TcpClient, T> observableSocketFactory)
+        protected ObservableListener(int port, Func<TcpClient, T> observableSocketFactory, ILogger logger = null)
         {
             _logger = logger;
             _port = port;
@@ -105,12 +105,12 @@ namespace CallTraking.NEventSocket.Common.Sockets
 
             _tcpListener = new TcpListener(IPAddress.Any, _port);
             _tcpListener.Start();
-            _logger.LogTrace($"Listener Started on Port {_port}");
+            _logger?.LogTrace($"Listener Started on Port {_port}");
 
             _subscription = Observable.FromAsync(_tcpListener.AcceptTcpClientAsync)
                 .Repeat()
                 .TakeUntil(_listenerTermination)
-                .Do(connection => _logger.LogTrace($"New Connection from {connection.Client.RemoteEndPoint}"))
+                .Do(connection => _logger?.LogTrace($"New Connection from {connection.Client.RemoteEndPoint}"))
                 .Select(
                     tcpClient =>
                     {
@@ -121,7 +121,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
                         catch (Exception ex)
                         {
                             //race condition - socket might shut down before we can initialize
-                            _logger.LogError(ex, "Unable to create observableSocket");
+                            _logger?.LogError(ex, "Unable to create observableSocket");
                             return null;
                         }
                     })
@@ -140,7 +140,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
                                     .Subscribe(
                                         _ =>
                                         {
-                                            _logger.LogTrace("Connection Disposed");
+                                            _logger?.LogTrace("Connection Disposed");
                                             _connections.Remove(connection);
                                         }));
                         }
@@ -150,7 +150,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
                         //ObjectDisposedException is thrown by TcpListener when Stop() is called before EndAcceptTcpClient()
                         if (!(ex is ObjectDisposedException))
                         {
-                            _logger.LogError(ex,"Error handling inbound connection");
+                            _logger?.LogError(ex, "Error handling inbound connection");
                         }
                     },
                     () => _isStarted.Set(false));
@@ -163,7 +163,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
             {
                 _tcpListener.Stop();
                 _isStarted.Set(false);
-                _logger.LogTrace("Listener stopped");
+                _logger?.LogTrace("Listener stopped");
             }
         }
 
@@ -184,7 +184,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
         {
             if (_disposed != null && !_disposed.EnsureCalledOnce())
             {
-                _logger.LogTrace($"Disposing (disposing:{disposing})");
+                _logger?.LogTrace($"Disposing (disposing:{disposing})");
 
                 if (disposing)
                 {
@@ -210,7 +210,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
                     }
                 }
 
-                _logger.LogTrace("Disposed");
+                _logger?.LogTrace("Disposed");
             }
         }
     }

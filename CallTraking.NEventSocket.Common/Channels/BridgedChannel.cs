@@ -6,7 +6,7 @@ namespace CallTraking.NEventSocket.Common.Channels
 {
     public class BridgedChannel : BaseChannel
     {
-        protected internal BridgedChannel(ILogger<Channel> logger, ChannelEvent eventMessage, EventSocket eventSocket) : base(logger, eventMessage, eventSocket)
+        protected internal BridgedChannel(ChannelEvent eventMessage, EventSocket eventSocket, ILogger<Channel> logger = null) : base(eventMessage, eventSocket, logger)
         {
         }
     }

@@ -18,7 +18,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
         /// Pass 0 as the port to auto-assign a dynamic port. Usually used for testing.
         /// </summary>
         /// <param name="port">The Tcp port to listen on.</param>
-        public OutboundListener(ILogger<OutboundSocket> logger, int port) : base(logger, port, tcpClient => new OutboundSocket(tcpClient, logger))
+        public OutboundListener(int port, ILogger<OutboundSocket> logger = null) : base(port, tcpClient => new OutboundSocket(tcpClient, logger), logger)
         {
             _logger = logger;
 
@@ -26,7 +26,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
                     async socket =>
                     {
                         await socket.Connect().ConfigureAwait(false);
-                        return await Channel.Create(null, socket).ConfigureAwait(false);
+                        return await Channel.Create(socket).ConfigureAwait(false);
                     });
         }
 
@@ -41,7 +41,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
                 //before we can do the connect/channel_data handshake
                 //then carry on allowing new connections
                 return channels
-                    .Do(_ => { }, ex => _logger.LogError(ex, "Unable to connect Channel"))
+                    .Do(_ => { }, ex => _logger?.LogError(ex, "Unable to connect Channel"))
                     .Retry();
             }
         }

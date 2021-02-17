@@ -1,4 +1,5 @@
-﻿using CallTraking.NEventSocket.Common.Utils;
+﻿using CallTraking.NEventSocket.Common.Sockets.Interfaces;
+using CallTraking.NEventSocket.Common.Utils;
 using CallTraking.NEventSocket.Common.Utils.Extensions;
 using CallTraking.NEventSocket.Common.Utils.ObjectPooling;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
     {
         private static long _idCounter = 0;
         protected readonly long Id;
-        private readonly ILogger<ObservableSocket> _logger;
+        private readonly ILogger _logger;
         private readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1);
         private readonly InterlockedBoolean _disposed = new InterlockedBoolean();
         private readonly InterlockedBoolean _isStarted = new InterlockedBoolean();
@@ -35,7 +36,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
             PlatformEnlightenmentProvider.Current = new CurrentPlatformEnlightenmentProvider();
         }
 
-        protected ObservableSocket(TcpClient tcpClient, ILogger<ObservableSocket> logger = null)
+        protected ObservableSocket(TcpClient tcpClient, ILogger logger = null)
         {
             _logger = logger;
             _tcpClient = tcpClient;

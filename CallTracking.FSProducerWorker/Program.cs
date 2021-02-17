@@ -1,5 +1,6 @@
 using CallTracking.Kafka.Common.Producer.Extensions;
 using CallTraking.NEventSocket.Common.Sockets;
+using CallTraking.NEventSocket.Common.Sockets.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,7 +25,7 @@ namespace CallTracking.FSProducerWorker
                     var host = configuration["FREESWITCH_ESL_HOSTNAME"];
                     var port = int.Parse(configuration["FREESWITCH_ESL_PORT"]);
                     var password = configuration["FREESWITCH_ESL_PASSWORD"];
-                    services.AddSingleton<IEventSocket, InboundSocket>(x => new InboundSocket(x.GetRequiredService<ILogger<InboundSocket>>(), host:host, port:port, password:password));
+                    services.AddSingleton<IEventSocket, InboundSocket>(x => new InboundSocket(host:host, port:port, password:password, logger:x.GetRequiredService<ILogger<InboundSocket>>()));
                     services.AddKafkaProducer();
                 });
     }

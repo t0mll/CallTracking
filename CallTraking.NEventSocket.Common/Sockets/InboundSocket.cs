@@ -1,11 +1,8 @@
-﻿using CallTraking.NEventSocket.Common.FreeSWITCH;
-using CallTraking.NEventSocket.Common.Utils.Extensions;
+﻿using CallTraking.NEventSocket.Common.Utils.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Net.Sockets;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
 
 namespace CallTraking.NEventSocket.Common.Sockets
 {
@@ -16,7 +13,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
     {
         private readonly ILogger<InboundSocket> _logger;
 
-        public InboundSocket(ILogger<InboundSocket> logger, string host, int port, string password, TimeSpan? timeout = null) : base(new TcpClient(host, port), timeout, logger)
+        public InboundSocket(string host, int port, string password, TimeSpan? timeout = null, ILogger<InboundSocket> logger = null) : base(new TcpClient(host, port), timeout, logger)
         {
             _logger = logger;
             InitialiseAsync(host, port, password, timeout);

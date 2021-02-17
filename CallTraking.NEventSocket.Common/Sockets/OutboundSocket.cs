@@ -18,13 +18,13 @@ namespace CallTraking.NEventSocket.Common.Sockets
     /// </remarks>
     public class OutboundSocket : EventSocket
     {
-        private readonly ILogger<EventSocket> _logger;
+        private readonly ILogger<OutboundSocket> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutboundSocket"/> class.
         /// </summary>
         /// <param name="tcpClient">The TCP client to wrap.</param>
-        protected internal OutboundSocket(TcpClient tcpClient, ILogger<EventSocket> logger = null) : base(tcpClient, logger:logger)
+        protected internal OutboundSocket(TcpClient tcpClient, ILogger<OutboundSocket> logger = null) : base(tcpClient, logger:logger)
         {
             _logger = logger;
         }

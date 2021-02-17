@@ -4,7 +4,7 @@ using CallTraking.NEventSocket.Common.FreeSWITCH.Messages;
 using System;
 using System.Threading.Tasks;
 
-namespace CallTraking.NEventSocket.Common.Sockets
+namespace CallTraking.NEventSocket.Common.Sockets.Interfaces
 {
     public interface IEventSocket
     {

@@ -3,6 +3,7 @@ using CallTraking.NEventSocket.Common.FreeSWITCH.Applications.Bridge;
 using CallTraking.NEventSocket.Common.FreeSWITCH.Events;
 using CallTraking.NEventSocket.Common.FreeSWITCH.Headers;
 using CallTraking.NEventSocket.Common.FreeSWITCH.Messages;
+using CallTraking.NEventSocket.Common.Sockets.Interfaces;
 using CallTraking.NEventSocket.Common.Utils;
 using CallTraking.NEventSocket.Common.Utils.Extensions;
 using CallTraking.NEventSocket.Common.Utils.ObjectPooling;
@@ -149,7 +150,7 @@ namespace CallTraking.NEventSocket.Common.Sockets
                                     }
                                     else
                                     {
-                                        _logger?.LogError($"ApiResponse received [{m.BodyText.Replace("\n", string.Empty)}] for [{command}]");
+                                        _logger?.LogInformation($"ApiResponse received [{m.BodyText.Replace("\n", string.Empty)}] for [{command}]");
                                     }
                                 },
                                 ex => _logger?.LogError(ex, $"Error waiting for Api Response to [{command}]."))

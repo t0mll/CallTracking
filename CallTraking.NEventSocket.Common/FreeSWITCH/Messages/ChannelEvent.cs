@@ -1,14 +1,17 @@
 ﻿using CallTraking.NEventSocket.Common.FreeSWITCH.Channel;
 using CallTraking.NEventSocket.Common.FreeSWITCH.Headers;
 using CallTraking.NEventSocket.Common.Utils.Extensions;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
 namespace CallTraking.NEventSocket.Common.FreeSWITCH.Messages
 {
     public class ChannelEvent : EventMessage
     {
-        internal ChannelEvent(BasicMessage basicMessage) : base(basicMessage)
+        private readonly ILogger<EventMessage> _logger;
+        internal ChannelEvent(BasicMessage basicMessage, ILogger<EventMessage> logger = null) : base(basicMessage, logger)
         {
+            _logger = logger;
         }
 
         /// <summary>
