@@ -12,8 +12,14 @@ namespace CallTraking.NEventSocket.Common.Sockets
     public class InboundSocket : EventSocket
     {
         private readonly ILogger<InboundSocket> _logger;
-
-        public InboundSocket(string host, int port, string password, TimeSpan? timeout = null, ILogger<InboundSocket> logger = null) : base(new TcpClient(host, port), timeout, logger)
+        /// <summary>
+        /// /
+        /// </summary>
+        /// <param name="host">(Default: localhost) The hostname or ip to connect to.</param>
+        /// <param name="port">(Default: 8021) The Tcp port to connect to.</param>
+        /// <param name="password">(Default: ClueCon) The password to authenticate with.</param>
+        /// <param name="timeout">(Optional) The auth request timeout.</param>
+        public InboundSocket(string host = "localhost", int port = 8021, string password = "ClueCon", TimeSpan? timeout = null, ILogger<InboundSocket> logger = null) : base(new TcpClient(host, port), timeout, logger)
         {
             _logger = logger;
             InitialiseAsync(host, port, password, timeout);
@@ -22,14 +28,8 @@ namespace CallTraking.NEventSocket.Common.Sockets
         /// <summary>
         /// Connects to FreeSwitch and authenticates
         /// </summary>
-        /// <param name="host">(Default: localhost) The hostname or ip to connect to.</param>
-        /// <param name="port">(Default: 8021) The Tcp port to connect to.</param>
-        /// <param name="password">(Default: ClueCon) The password to authenticate with.</param>
-        /// <param name="timeout">(Optional) The auth request timeout.</param>
-        /// <returns>A task of <see cref="InboundSocket"/>.</returns>
         /// <exception cref="InboundSocketConnectionFailedException"></exception>
-        private async void InitialiseAsync(
-            string host = "localhost", int port = 8021, string password = "ClueCon", TimeSpan? timeout = null)
+        private async void InitialiseAsync(string host, int port, string password, TimeSpan? timeout = null)
         {
             try
             {
