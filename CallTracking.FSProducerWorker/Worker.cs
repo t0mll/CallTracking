@@ -1,3 +1,5 @@
+using CallTracking.Kafka.Common.Producer.Interfaces;
+using CallTracking.Kafka.Messaging.Messages;
 using CallTraking.NEventSocket.Common.FreeSWITCH.Applications.Originate;
 using CallTraking.NEventSocket.Common.FreeSWITCH.Events;
 using CallTraking.NEventSocket.Common.Sockets.Interfaces;
@@ -18,12 +20,14 @@ namespace CallTracking.FSProducerWorker
         private readonly ILogger<Worker> _logger;
         private readonly IConfiguration _configuration;
         private readonly IEventSocket _socket;
+        private readonly IMessageProducer _messageProducer;
 
-        public Worker(ILogger<Worker> logger, IConfiguration configuration, IEventSocket socket)
+        public Worker(ILogger<Worker> logger, IConfiguration configuration, IEventSocket socket, IMessageProducer messageProducer)
         {
             _logger = logger;
             _configuration = configuration;
             _socket = socket;
+            _messageProducer = messageProducer;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -38,7 +42,7 @@ namespace CallTracking.FSProducerWorker
             _socket.ChannelEvents.Subscribe(e => _logger.LogInformation($"Channel Event [{e.UUID}] - {e.EventName}"));
 
             _socket.ChannelEvents.Where(x => x.EventName == EventNames.ChannelAnswer)
-                .Subscribe(async x => await _socket.Play(x.UUID, "misc/8000/misc-freeswitch_is_state_of_the_art.wav"));
+                .Subscribe(async x => await _messageProducer.ProduceAsync(x.UUID, new ChannelAnswerEventMessage(x.UUID, x.BodyText,x.ChannelState, x.AnswerState), stoppingToken));
 
             var originate = await _socket.Originate(
                             "user/1000",

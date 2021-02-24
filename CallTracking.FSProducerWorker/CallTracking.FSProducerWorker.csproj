@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CallTracking.Kafka.Messaging\CallTracking.Kafka.Messaging.csproj" />
     <ProjectReference Include="..\CallTracking.Kafka\CallTracking.Kafka.Common.csproj" />
     <ProjectReference Include="..\CallTraking.NEventSocket.Common\CallTraking.NEventSocket.Common.csproj" />
   </ItemGroup>

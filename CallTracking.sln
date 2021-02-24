@@ -47,6 +47,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NEventSocket.Common", "NEve
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CallTraking.NEventSocket.Common", "CallTraking.NEventSocket.Common\CallTraking.NEventSocket.Common.csproj", "{1594A3F9-001F-4CBB-8B77-5B7DABEF9CF9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CallTracking.Kafka.Messaging", "CallTracking.Kafka.Messaging\CallTracking.Kafka.Messaging.csproj", "{83D06A49-23C2-4094-A1F3-BAB35E2F335F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{1594A3F9-001F-4CBB-8B77-5B7DABEF9CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1594A3F9-001F-4CBB-8B77-5B7DABEF9CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1594A3F9-001F-4CBB-8B77-5B7DABEF9CF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D06A49-23C2-4094-A1F3-BAB35E2F335F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D06A49-23C2-4094-A1F3-BAB35E2F335F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D06A49-23C2-4094-A1F3-BAB35E2F335F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D06A49-23C2-4094-A1F3-BAB35E2F335F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +93,7 @@ Global
 		{CC468CC8-5474-4FBF-9A76-11D11C50DFC9} = {17797F00-5079-413A-8DFC-86BE61EC56D9}
 		{7FD62E62-129F-4921-82DA-39EF03BC8C21} = {C5B2A0B6-E462-49C6-AB04-11F943571DEA}
 		{1594A3F9-001F-4CBB-8B77-5B7DABEF9CF9} = {7FD62E62-129F-4921-82DA-39EF03BC8C21}
+		{83D06A49-23C2-4094-A1F3-BAB35E2F335F} = {F4E78CDF-A3E5-4637-BB4E-804068992AFB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26561E4E-45EC-45FA-8E45-EAECBFDB7857}

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CallTracking.Kafka\CallTracking.Kafka.Common.csproj" />
+    <ProjectReference Include="..\CallTraking.NEventSocket.Common\CallTraking.NEventSocket.Common.csproj" />
+  </ItemGroup>
+
+</Project>
