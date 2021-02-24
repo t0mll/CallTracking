@@ -42,7 +42,7 @@ namespace CallTracking.FSProducerWorker
             _socket.ChannelEvents.Subscribe(e => _logger.LogInformation($"Channel Event [{e.UUID}] - {e.EventName}"));
 
             _socket.ChannelEvents.Where(x => x.EventName == EventNames.ChannelAnswer)
-                .Subscribe(async x => await _messageProducer.ProduceAsync(x.UUID, new ChannelAnswerEventMessage(x.UUID, x.BodyText,x.ChannelState, x.AnswerState), stoppingToken));
+                .Subscribe(async x => await _messageProducer.ProduceAsync(x.UUID, new ChannelAnswerEventMessage(x.UUID, x.BodyText,x.ChannelState, x.AnswerState, x.Headers), stoppingToken));
 
             var originate = await _socket.Originate(
                             "user/1000",
