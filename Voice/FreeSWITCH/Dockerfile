@@ -32,7 +32,10 @@ VOLUME ["/tmp"]
 
 # Limits Configuration
 COPY    configs/freeswitch.limits.conf /etc/security/limits.d/
+# ESL 
 COPY    configs/acl.conf.xml /etc/freeswitch/autoload_configs/
+COPY    configs/event_socket.conf.xml /etc/freeswitch/autoload_configs/
+
 
 # Healthcheck to make sure the service is running
 SHELL       ["/bin/bash"]
