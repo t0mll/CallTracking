@@ -2,10 +2,8 @@
 using CallTraking.NEventSocket.Common.FreeSWITCH.Messages;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CallTraking.NEventSocket.Common.Sockets

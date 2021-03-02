@@ -4,7 +4,6 @@ using CallTraking.NEventSocket.Common.FreeSWITCH.Applications.Originate;
 using CallTraking.NEventSocket.Common.FreeSWITCH.Events;
 using CallTraking.NEventSocket.Common.Sockets.Interfaces;
 using CallTraking.NEventSocket.Common.Utils.Extensions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,14 +17,12 @@ namespace CallTracking.FSProducerWorker
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IConfiguration _configuration;
         private readonly IEventSocket _socket;
         private readonly IMessageProducer _messageProducer;
 
-        public Worker(ILogger<Worker> logger, IConfiguration configuration, IEventSocket socket, IMessageProducer messageProducer)
+        public Worker(ILogger<Worker> logger, IEventSocket socket, IMessageProducer messageProducer)
         {
             _logger = logger;
-            _configuration = configuration;
             _socket = socket;
             _messageProducer = messageProducer;
         }
