@@ -1,2 +1,2 @@
 ﻿# Producer Worker - FreeSWITCH
-This worker subscibes to FreeSWITCH channel event and push the information it receives to Kafka.
+This worker subscibes to FreeSWITCH channel events and push the information it receives to Kafka.
