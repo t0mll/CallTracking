@@ -1,3 +1,5 @@
+using CallTracking.Kafka.Common;
+using CallTracking.Kafka.Common.Consumer.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -19,6 +21,8 @@ namespace CallTracking.FSConsumerWorker
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
+                    services.AddOptions<KafkaOptions>().Bind(hostContext.Configuration.GetSection("Kafka"));
+                    services.AddKafkaConsumer(typeof(Program));
                 });
     }
 }
