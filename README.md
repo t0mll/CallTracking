@@ -19,7 +19,7 @@ Once you have installed the all the tools you should just be able to to start th
 
 ##### FreeSWITCH
 This container runs the lastest version of FreeSWITCH with vanilla config.
-```
+```yml
   freeswitch:
     hostname: freeswitch
     container_name: freeswitch
@@ -44,7 +44,7 @@ This container runs the Consumer worker fetching the message from Kafka.
 This container runs the Producer worker which is establishing an Inbound Socket connection to the FreeSWITCH container (ESL:8021).
 The worker is listening for all message and print Info log for each message received.
 Only Channel Answer message are sent to Kafka.
-```
+```yml
   calltracking.fsproducerworker:
     image: ${DOCKER_REGISTRY-}calltrackingfsproducerworker
     container_name: fs-producer-worker
@@ -57,7 +57,7 @@ Only Channel Answer message are sent to Kafka.
 
 ##### Kafka
 There are a few containers that are started for Kafka. Use ***control-center*** [http://localhost:9021](http://localhost:9021) to check the messages.
-```
+```yml
   zookeeper:
     image: confluentinc/cp-zookeeper:6.1.0
     hostname: zookeeper
