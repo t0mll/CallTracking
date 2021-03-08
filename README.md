@@ -31,7 +31,7 @@ This container runs the lastest version of FreeSWITCH with vanilla config.
 
 ##### Consumer Worker
 This container runs the Consumer worker fetching the message from Kafka.
-```
+```yml
   calltracking.fsconsumerworker:
     image: ${DOCKER_REGISTRY-}calltrackingfsconsumerworker
     container_name: fs-consumer-worker
@@ -56,7 +56,7 @@ Only Channel Answer message are sent to Kafka.
 ```
 
 ##### Kafka
-There are a few containers that are started for Kafka. Use ***control-center*** [http://localhost:9021] to check the messages.
+There are a few containers that are started for Kafka. Use ***control-center*** [http://localhost:9021](http://localhost:9021) to check the messages.
 ```
   zookeeper:
     image: confluentinc/cp-zookeeper:6.1.0
